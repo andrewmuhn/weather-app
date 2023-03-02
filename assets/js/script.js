@@ -1,5 +1,6 @@
 const apiKey = '64a57b8b595143bde642b3a647236223';
 let requestUrl = 'http://api.openweathermap.org/'
+let cityList;
 
 //elements from dom
 let searchFormEl = document.querySelector('#search-form');
@@ -57,8 +58,8 @@ const handleFormSubmit = (event) => {
 
 //takes geocode info and fires of fetch request for current weather and 5-day weather. fires off saveToLocalStorage
 const searchCityWeather = (lat, lon) => {
-  // console.log(lat);
-  // console.log(lon);
+  console.log(lat);
+  console.log(lon);
 }
 
 //extracts values from retured JSON weather data and displays them in html file
@@ -66,28 +67,21 @@ const printWeatherData = () => {
 
 }
 
-//parses data from local storage. if no data then reurn an empty array.firest off printCityList
-// const readFromLocalStorage = () => {
-//   let cityList = localStorage.getItem('cityList')
-//   if (cityList) {
-//     cityList = JSON.parse(cityList);
-//   } else {
-//     cityList = [];
-//   }
-//   return cityList;
+const readLocalStorage = () => {
 
-// }
-
-//save an an array of objects to local storage with user input as key and fetched geocode as value. fires off readromLocalStorage
-const saveToLocalStorage = (cityName, lat, lon) => {
-
-  let cityList = localStorage.getItem('cityList');
+  cityList = localStorage.getItem('cityList');
   if (cityList) {
     cityList = JSON.parse(cityList);
   } else {
     cityList = [];
   }
 
+}
+
+//save an an array of objects to local storage with city name lat and long as values. fires off printCityList
+const saveToLocalStorage = (cityName, lat, lon) => {
+
+  readLocalStorage();
 
   console.log(cityList);
   console.log(lat);
@@ -131,10 +125,29 @@ const printCityList = () => {
   console.log(searchFormEl);
 }
 
+const handleCityRecall = (event) => {
+  event.stopPropagation();
+
+  readLocalStorage();
+  let lat = '';
+  let lon = '';
+
+  let cityName = event.target.textContent;
+  for (let i = 0; i < cityList.length; i++) {
+    if (cityList[i].cityName === cityName) {
+      lat = cityList[i].lat;
+      lon = cityList[i].lon;
+    }
+  }
+
+  searchCityWeather(lat, lon);
+}
+
 //TODO: create event handlers for:
 // -search button to fire off handleFormSubmit
 searchFormEl.addEventListener('submit', handleFormSubmit);
 // -appended city buttons to fire off fetchCityWeather
+cityListEl.addEventListener('click', handleCityRecall)
 
 //call functions
 printCityList();
