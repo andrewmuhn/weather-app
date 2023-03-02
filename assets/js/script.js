@@ -26,20 +26,25 @@ let searchApi = (requestUrl) => {
 
       return response.json();
     })
+
     .then((data) => {
       console.log('Fetch Response \n----------------');
       console.log(data);
+      console.log(data.hasOwnProperty('local_names'));
+      console.log(data.hasOwnProperty('main'));
+      console.log(data.hasOwnProperty('list'));
 
       //checks if it was a geocode request
-      if (data[0].local_names) {
-        console.log(data[0].local_names);
+      if (data.hasOwnProperty('local_names')) {
         searchCityWeather(data[0].lat, data[0].lon);
         saveToLocalStorage(data[0].name, data[0].lat, data[0].lon);
+      } else if (data.hasOwnProperty('main')) {
+        printCurrentWeatherData(data.main);
+      } else if (data.hasOwnProperty('list')) {
+        print5DayWeatherData(data.list);
       }
-
-      //
-
     })
+
     .catch((error) => {
       console.error(error);
     });
@@ -48,22 +53,41 @@ let searchApi = (requestUrl) => {
 
 //should take user inputs and extract applicable parmeters and fire off functions to fetch geocode from city name.
 const handleFormSubmit = (event) => {
+  requestUrl = 'http://api.openweathermap.org/'
   event.preventDefault();
   let cityName = document.querySelector('#city-name').value.trim();
   cityName = cityName.toLowerCase().replace(' ', '-');
   console.log(cityName);
-  requestUrl = requestUrl.concat('geo/1.0/direct?limit=1&appid=' + apiKey + '&q=' + cityName);
+  requestUrl = requestUrl.concat(`geo/1.0/direct?limit=1&q=${cityName}&appid=${apiKey}`);
   searchApi(requestUrl);
 }
 
 //takes geocode info and fires of fetch request for current weather and 5-day weather. fires off saveToLocalStorage
 const searchCityWeather = (lat, lon) => {
+  requestUrl = 'http://api.openweathermap.org/'
   console.log(lat);
   console.log(lon);
+  let currentURL = requestUrl.concat(`data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`);
+  requestUrl = 'http://api.openweathermap.org/'
+  let forecastUrl = requestUrl.concat(`data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`);
+
+  searchApi(currentURL);
+  searchApi(forecastUrl);
 }
 
 //extracts values from retured JSON weather data and displays them in html file
-const printWeatherData = () => {
+const printCurrentWeatherData = (data) => {
+  console.log('test: current');
+  console.log(data);
+}
+
+const print5DayWeatherData = (data) => {
+  console.log('test: 5day');
+  console.log(data[3]);
+  console.log(data[11]);
+  console.log(data[19]);
+  console.log(data[27]);
+  console.log(data[35]);
 
 }
 
