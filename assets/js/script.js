@@ -1,10 +1,11 @@
 const apiKey = '64a57b8b595143bde642b3a647236223';
-let requestUrl = 'http://api.openweathermap.org/'
 let cityList;
 
 //elements from dom
 let searchFormEl = document.querySelector('#search-form');
 let cityListEl = document.querySelector('#city-list');
+let currentWeatherEl = document.querySelector('#current-weather');
+let forecastContainerEl = document.querySelector('#forecast-container')
 
 //!psuedo code
 //take input city from user entry and convert it into the applicable parameters to append to the request urls for both current and 5 day forecast
@@ -12,7 +13,6 @@ let cityListEl = document.querySelector('#city-list');
 // - append button of city to search list so user can click on previously searched cities.
 //extract needed information (temp, wind, humidity) from returned JSON object.
 // - append above info into html document
-//
 
 
 //TODO: create fetch request that accepts a URL varaible
@@ -30,9 +30,6 @@ let searchApi = (requestUrl) => {
     .then((data) => {
       console.log('Fetch Response \n----------------');
       console.log(data);
-      console.log(data.hasOwnProperty('local_names'));
-      console.log(data.hasOwnProperty('main'));
-      console.log(data.hasOwnProperty('list'));
 
       //checks if it was a geocode request
       if (data.hasOwnProperty('local_names')) {
@@ -53,23 +50,20 @@ let searchApi = (requestUrl) => {
 
 //should take user inputs and extract applicable parmeters and fire off functions to fetch geocode from city name.
 const handleFormSubmit = (event) => {
-  requestUrl = 'http://api.openweathermap.org/'
+  let requestUrl = 'http://api.openweathermap.org/'
   event.preventDefault();
   let cityName = document.querySelector('#city-name').value.trim();
   cityName = cityName.toLowerCase().replace(' ', '-');
-  console.log(cityName);
   requestUrl = requestUrl.concat(`geo/1.0/direct?limit=1&q=${cityName}&appid=${apiKey}`);
   searchApi(requestUrl);
 }
 
 //takes geocode info and fires of fetch request for current weather and 5-day weather. fires off saveToLocalStorage
 const searchCityWeather = (lat, lon) => {
+  let requestUrl = 'http://api.openweathermap.org/'
+  let currentURL = requestUrl.concat(`data/2.5/weather?units=imperial&lat=${lat}&lon=${lon}&appid=${apiKey}`);
   requestUrl = 'http://api.openweathermap.org/'
-  console.log(lat);
-  console.log(lon);
-  let currentURL = requestUrl.concat(`data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`);
-  requestUrl = 'http://api.openweathermap.org/'
-  let forecastUrl = requestUrl.concat(`data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`);
+  let forecastUrl = requestUrl.concat(`data/2.5/forecast?units=imperial&lat=${lat}&lon=${lon}&appid=${apiKey}`);
 
   searchApi(currentURL);
   searchApi(forecastUrl);
@@ -77,17 +71,61 @@ const searchCityWeather = (lat, lon) => {
 
 //extracts values from retured JSON weather data and displays them in html file
 const printCurrentWeatherData = (data) => {
-  console.log('test: current');
-  console.log(data);
+  // console.log('test: current');
+  // console.log(data);
+
+
 }
 
 const print5DayWeatherData = (data) => {
+  console.log(data);
   console.log('test: 5day');
   console.log(data[3]);
   console.log(data[11]);
   console.log(data[19]);
   console.log(data[27]);
   console.log(data[35]);
+
+
+  let forecastArr = [data.slice(3, 4), data.slice(11, 12), data.slice(19, 20), data.slice(27, 28), data.slice(35, 36)];
+  console.log(forecastArr);
+  forecastContainerEl.innerHTML = '';
+  for (let i = 0; i < forecastArr.length; i++) {
+    let date = forecastArr[i][0].dt_txt;
+    let icon = forecastArr[i][0].weather[0].icon;
+    let temp = forecastArr[i][0].main.temp;
+    let wind = forecastArr[i][0].wind.speed;
+    let humidity = forecastArr[i][0].main.humidity;
+    console.log(icon);
+    console.log(temp);
+    console.log(wind);
+    console.log(humidity);
+
+    date = date.replaceAll('-', '/').split(' ');
+    console.log(date);
+
+    let dateEl = document.createElement('h4');
+    dateEl.textContent = date[0];
+
+    let iconEl = document.createElement('img');
+    iconEl.setAttribute('src', `http://openweathermap.org/img/wn/${icon}@2x.png`);
+
+    let forecastEl = document.createElement('div');
+    forecastEl.setAttribute('class', 'col bg-info border rounded-3');
+    let tempEl = document.createElement('p');
+    tempEl.innerHTML = `Temp: ${temp}&#8457;`;
+    let windEl = document.createElement('p');
+    windEl.textContent = `Wind: ${wind}MPH`;
+    let humidityEl = document.createElement('p');
+    humidityEl.textContent = `Humidity: ${humidity}%`;
+
+    forecastEl.append(dateEl);
+    forecastEl.append(iconEl);
+    forecastEl.append(tempEl);
+    forecastEl.append(windEl);
+    forecastEl.append(humidityEl);
+    forecastContainerEl.append(forecastEl);
+  }
 
 }
 
