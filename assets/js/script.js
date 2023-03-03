@@ -5,7 +5,8 @@ let cityList;
 let searchFormEl = document.querySelector('#search-form');
 let cityListEl = document.querySelector('#city-list');
 let currentWeatherEl = document.querySelector('#current-weather');
-let forecastContainerEl = document.querySelector('#forecast-container')
+let forecastContainerEl = document.querySelector('#forecast-container');
+let errorModal = new bootstrap.Modal('#error-modal')
 
 //!psuedo code
 //take input city from user entry and convert it into the applicable parameters to append to the request urls for both current and 5 day forecast
@@ -14,8 +15,8 @@ let forecastContainerEl = document.querySelector('#forecast-container')
 //extract needed information (temp, wind, humidity) from returned JSON object.
 // - append above info into html document
 
+//* fetch request
 
-//TODO: create fetch request that accepts a URL varaible
 let searchApi = (requestUrl) => {
   console.log(requestUrl);
   fetch(requestUrl)
@@ -31,12 +32,16 @@ let searchApi = (requestUrl) => {
       console.log('Fetch Response \n----------------');
       console.log(data);
 
-      //checks if it was a geocode request
+      if (data.length === 0) {
+        errorModal.show();
+      }
+
+      //checks if response was a geocode, current weather, or 5 day forecast request
       if (data.hasOwnProperty('local_names')) {
         searchCityWeather(data[0].lat, data[0].lon);
         saveToLocalStorage(data[0].name, data[0].lat, data[0].lon);
       } else if (data.hasOwnProperty('main')) {
-        printCurrentWeatherData(data.main);
+        printCurrentWeatherData(data);
       } else if (data.hasOwnProperty('list')) {
         print5DayWeatherData(data.list);
       }
@@ -73,19 +78,11 @@ const searchCityWeather = (lat, lon) => {
 const printCurrentWeatherData = (data) => {
   // console.log('test: current');
   // console.log(data);
-
-
 }
 
-const print5DayWeatherData = (data) => {
-  console.log(data);
-  console.log('test: 5day');
-  console.log(data[3]);
-  console.log(data[11]);
-  console.log(data[19]);
-  console.log(data[27]);
-  console.log(data[35]);
 
+//receives data from server and displays it
+const print5DayWeatherData = (data) => {
 
   let forecastArr = [data.slice(3, 4), data.slice(11, 12), data.slice(19, 20), data.slice(27, 28), data.slice(35, 36)];
   console.log(forecastArr);
@@ -96,13 +93,8 @@ const print5DayWeatherData = (data) => {
     let temp = forecastArr[i][0].main.temp;
     let wind = forecastArr[i][0].wind.speed;
     let humidity = forecastArr[i][0].main.humidity;
-    console.log(icon);
-    console.log(temp);
-    console.log(wind);
-    console.log(humidity);
 
     date = date.replaceAll('-', '/').split(' ');
-    console.log(date);
 
     let dateEl = document.createElement('h4');
     dateEl.textContent = date[0];
@@ -129,6 +121,7 @@ const print5DayWeatherData = (data) => {
 
 }
 
+// parses data from local storage for other functions to use
 const readLocalStorage = () => {
 
   cityList = localStorage.getItem('cityList');
@@ -187,6 +180,7 @@ const printCityList = () => {
   console.log(searchFormEl);
 }
 
+//handles getting localstorage info for the saved city and fires off the fetch request for current and 5 day weather
 const handleCityRecall = (event) => {
   event.stopPropagation();
 
@@ -205,11 +199,20 @@ const handleCityRecall = (event) => {
   searchCityWeather(lat, lon);
 }
 
-//TODO: create event handlers for:
+///simple function that runs when close button on modal is click and closes the error modal
+const closeModal = () => {
+  errorModal.hide();
+}
+
+
+// * Event Handlers
 // -search button to fire off handleFormSubmit
 searchFormEl.addEventListener('submit', handleFormSubmit);
 // -appended city buttons to fire off fetchCityWeather
-cityListEl.addEventListener('click', handleCityRecall)
+cityListEl.addEventListener('click', handleCityRecall);
+// -listens for clicks on the close button in the modal
+document.querySelector('.close').addEventListener('click', closeModal);
 
-//call functions
+// * init function
+//runs the city list function on start up to see if there are already previously view cities in local storage
 printCityList();
