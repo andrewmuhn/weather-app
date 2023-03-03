@@ -37,13 +37,13 @@ let searchApi = (requestUrl) => {
       }
 
       //checks if response was a geocode, current weather, or 5 day forecast request
-      if (data.hasOwnProperty('local_names')) {
-        searchCityWeather(data[0].lat, data[0].lon);
-        saveToLocalStorage(data[0].name, data[0].lat, data[0].lon);
-      } else if (data.hasOwnProperty('main')) {
+      if (data.hasOwnProperty('main')) {
         printCurrentWeatherData(data);
       } else if (data.hasOwnProperty('list')) {
         print5DayWeatherData(data.list);
+      } else {
+        searchCityWeather(data[0].lat, data[0].lon);
+        saveToLocalStorage(data[0].name, data[0].lat, data[0].lon);
       }
     })
 
@@ -76,8 +76,43 @@ const searchCityWeather = (lat, lon) => {
 
 //extracts values from retured JSON weather data and displays them in html file
 const printCurrentWeatherData = (data) => {
-  // console.log('test: current');
-  // console.log(data);
+
+  currentWeatherEl.innerHTML = '';
+
+  let cityName = data.name;
+  let date = new Date();
+  let year = date.getFullYear();
+  let month = date.getMonth();
+  let day = date.getDay();
+  let icon = data.weather[0].icon;
+  let temp = data.main.temp;
+  let wind = data.wind.speed;
+  let humidity = data.main.humidity;
+
+
+  let dateFormat = `(${month}/${day}/${year})`;
+
+  let titleEl = document.createElement('div');
+  titleEl.innerHTML = `<h2>${cityName} ${dateFormat} </h2>`;
+  titleEl.setAttribute('style', 'display: inline-block');
+
+  let iconEl = document.createElement('img');
+  iconEl.setAttribute('src', `http://openweathermap.org/img/wn/${icon}@2x.png`);
+  iconEl.setAttribute('style', 'display: inline-block');
+
+  let tempEl = document.createElement('p');
+  tempEl.innerHTML = `Temp: ${temp}&#8457;`;
+  let windEl = document.createElement('p');
+  windEl.textContent = `Wind: ${wind}MPH`;
+  let humidityEl = document.createElement('p');
+  humidityEl.textContent = `Humidity: ${humidity}%`;
+
+  currentWeatherEl.append(titleEl);
+  currentWeatherEl.append(iconEl);
+  currentWeatherEl.append(tempEl);
+  currentWeatherEl.append(windEl);
+  currentWeatherEl.append(humidityEl);
+
 }
 
 
