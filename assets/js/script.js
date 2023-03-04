@@ -216,12 +216,12 @@ const printCityList = () => {
 
 
     let newListItem = document.createElement('div');
-    newListItem.setAttribute('class', 'my-2 btn-group d-inline');
+    newListItem.setAttribute('class', 'my-2 d-inline');
     newListItem.setAttribute('id', 'new-list-item');
     newListItem.setAttribute('role', 'group');
 
     let newButton = document.createElement('span');
-    newButton.innerHTML = `<button type="button" data-value="city" class="btn bg-dark-subtle rounded-left" style="width:80%" left">${name}</button>`
+    newButton.innerHTML = `<button type="button" data-value="city" class="my-1 btn bg-dark-subtle rounded-left" style="width:80%" left">${name}</button>`
 
     var deleteEl = document.createElement('span')
     deleteEl.innerHTML = `<button type="button" class="btn btn-danger btn-delete-city rounded-right" style="width: 19%" left" data-value="delete" data-index="${i}">X</button>`
