@@ -166,17 +166,13 @@ const readLocalStorage = () => {
     cityList = [];
   }
 
+  return cityList;
 }
 
 //save an an array of objects to local storage with city name lat and long as values. fires off printCityList
 const saveToLocalStorage = (cityName, lat, lon) => {
 
   readLocalStorage();
-
-  console.log(cityList);
-  console.log(lat);
-  console.log(lon);
-  console.log(cityName);
 
   let newCity = {
     cityName: cityName,
@@ -187,6 +183,24 @@ const saveToLocalStorage = (cityName, lat, lon) => {
   cityList.splice(0, 0, newCity);
   localStorage.setItem('cityList', JSON.stringify(cityList));
   printCityList();
+}
+
+// Removes a city from local storage and prints the city data
+const handleDeleteCity = (event) => {
+  event.stopPropagation();
+  if (event.target.getAttribute('data-value') === 'delete') {
+
+    console.log(parseInt(event.target.getAttribute('data-index')));
+    let cityIndex = parseInt(event.target.getAttribute('data-index'));
+    let cityList = readLocalStorage();
+    // remove city from the array
+    cityList.splice(cityIndex, 1);
+
+    localStorage.setItem('cityList', JSON.stringify(cityList));
+
+    // print citys
+    printCityList();
+  }
 }
 
 //take parsed data from local storage and save it in the form of a button that is appended to the search list
@@ -202,14 +216,18 @@ const printCityList = () => {
 
 
     let newListItem = document.createElement('div');
-    newListItem.setAttribute('class', 'd-grid my-2');
+    newListItem.setAttribute('class', 'my-2 btn-group d-inline');
+    newListItem.setAttribute('id', 'new-list-item');
+    newListItem.setAttribute('role', 'group');
 
-    let newButton = document.createElement('button');
-    newButton.setAttribute('type', 'button');
-    newButton.setAttribute('class', 'btn bg-dark-subtle');
-    newButton.textContent = name;
+    let newButton = document.createElement('span');
+    newButton.innerHTML = `<button type="button" data-value="city" class="btn bg-dark-subtle rounded-left" style="width:80%" left">${name}</button>`
+
+    var deleteEl = document.createElement('span')
+    deleteEl.innerHTML = `<button type="button" class="btn btn-danger btn-delete-city rounded-right" style="width: 19%" left" data-value="delete" data-index="${i}">X</button>`
 
     newListItem.append(newButton);
+    newListItem.append(deleteEl);
     cityListEl.append(newListItem);
   }
   console.log(searchFormEl);
@@ -218,20 +236,21 @@ const printCityList = () => {
 //handles getting localstorage info for the saved city and fires off the fetch request for current and 5 day weather
 const handleCityRecall = (event) => {
   event.stopPropagation();
+  if (event.target.getAttribute('data-value') === 'city') {
+    readLocalStorage();
+    let lat = '';
+    let lon = '';
 
-  readLocalStorage();
-  let lat = '';
-  let lon = '';
-
-  let cityName = event.target.textContent;
-  for (let i = 0; i < cityList.length; i++) {
-    if (cityList[i].cityName === cityName) {
-      lat = cityList[i].lat;
-      lon = cityList[i].lon;
+    let cityName = event.target.textContent;
+    for (let i = 0; i < cityList.length; i++) {
+      if (cityList[i].cityName === cityName) {
+        lat = cityList[i].lat;
+        lon = cityList[i].lon;
+      }
     }
-  }
 
-  searchCityWeather(lat, lon);
+    searchCityWeather(lat, lon);
+  }
 }
 
 ///simple function that runs when close button on modal is click and closes the error modal
@@ -247,6 +266,8 @@ searchFormEl.addEventListener('submit', handleFormSubmit);
 cityListEl.addEventListener('click', handleCityRecall);
 // -listens for clicks on the close button in the modal
 document.querySelector('.close').addEventListener('click', closeModal);
+//deletes items off the city list
+cityListEl.addEventListener('click', handleDeleteCity)
 
 // * init function
 //runs the city list function on start up to see if there are already previously view cities in local storage
