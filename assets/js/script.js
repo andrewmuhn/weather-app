@@ -55,7 +55,7 @@ let searchApi = (requestUrl) => {
 
 //should take user inputs and extract applicable parmeters and fire off functions to fetch geocode from city name.
 const handleFormSubmit = (event) => {
-  let requestUrl = 'http://api.openweathermap.org/'
+  let requestUrl = 'https://api.openweathermap.org/'
   event.preventDefault();
   let cityName = document.querySelector('#city-name').value.trim();
   cityName = cityName.toLowerCase().replace(' ', '-');
@@ -65,9 +65,9 @@ const handleFormSubmit = (event) => {
 
 //takes geocode info and fires of fetch request for current weather and 5-day weather. fires off saveToLocalStorage
 const searchCityWeather = (lat, lon) => {
-  let requestUrl = 'http://api.openweathermap.org/'
+  let requestUrl = 'https://api.openweathermap.org/'
   let currentURL = requestUrl.concat(`data/2.5/weather?units=imperial&lat=${lat}&lon=${lon}&appid=${apiKey}`);
-  requestUrl = 'http://api.openweathermap.org/'
+  requestUrl = 'https://api.openweathermap.org/'
   let forecastUrl = requestUrl.concat(`data/2.5/forecast?units=imperial&lat=${lat}&lon=${lon}&appid=${apiKey}`);
 
   searchApi(currentURL);
@@ -97,7 +97,7 @@ const printCurrentWeatherData = (data) => {
   titleEl.setAttribute('style', 'display: inline-block');
 
   let iconEl = document.createElement('img');
-  iconEl.setAttribute('src', `http://openweathermap.org/img/wn/${icon}@2x.png`);
+  iconEl.setAttribute('src', `https://openweathermap.org/img/wn/${icon}@2x.png`);
   iconEl.setAttribute('style', 'display: inline-block');
 
   let tempEl = document.createElement('p');
@@ -135,7 +135,7 @@ const print5DayWeatherData = (data) => {
     dateEl.textContent = date[0];
 
     let iconEl = document.createElement('img');
-    iconEl.setAttribute('src', `http://openweathermap.org/img/wn/${icon}@2x.png`);
+    iconEl.setAttribute('src', `https://openweathermap.org/img/wn/${icon}@2x.png`);
 
     let forecastEl = document.createElement('div');
     forecastEl.setAttribute('class', 'col bg-info border rounded-3');
