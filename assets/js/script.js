@@ -216,21 +216,15 @@ const printCityList = () => {
 
 
     let newListItem = document.createElement('div');
-    newListItem.setAttribute('class', 'd-grid my-2 row');
+    newListItem.setAttribute('class', 'my-2 btn-group d-inline');
     newListItem.setAttribute('id', 'new-list-item');
+    newListItem.setAttribute('role', 'group');
 
     let newButton = document.createElement('span');
-    newButton.innerHTML = `<button type="button" data-value="city" class="btn bg-dark-subtle" style="display: inline-block">${name}</button>`
-    // newButton.setAttribute('type', 'button');
-    // newButton.setAttribute('class', 'btn bg-dark-subtle');
-    // newButton.setAttribute('style', "display: inline-block")
-    // newButton.textContent = name;
+    newButton.innerHTML = `<button type="button" data-value="city" class="btn bg-dark-subtle rounded-left" style="width:80%" left">${name}</button>`
 
     var deleteEl = document.createElement('span')
-    deleteEl.innerHTML = `<button type="button" class="btn btn-danger btn-delete-city" style="display: inline-block" data-value="delete" data-index="${i}">X</button>`
-    // deleteEl.setAttribute('type', 'button');
-    // deleteEl.setAttribute('class', 'btn btn-danger btn-delete-city');
-    // deleteEl.setAttribute('data-index' `${i}`);
+    deleteEl.innerHTML = `<button type="button" class="btn btn-danger btn-delete-city rounded-right" style="width: 19%" left" data-value="delete" data-index="${i}">X</button>`
 
     newListItem.append(newButton);
     newListItem.append(deleteEl);
