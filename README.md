@@ -18,6 +18,7 @@
 ## Credits
 
 Project of Andrew Muhn
+as part of UofO EdX Bootcamp
 
 Integrated:
 
@@ -26,6 +27,8 @@ Integrated:
 [OpenWeatherApi](https://openweathermap.org/api)
 
 [How to use Date() and format it.](https://linuxhint.com/format-date-as-yyyy-mm-dd-in-javascript/#:~:text=To%20set%20the%20format%20of,and%20%E2%80%9CgetDate()%E2%80%9D%20methods.)
+
+[How to format Date() into 2 digit format ex: 03/06/2023 vs 3/6/2023](https://stackoverflow.com/questions/6040515/how-do-i-get-month-and-date-of-javascript-in-2-digit-format)
 
 [How to use vanilla js to call bootsrap modal](https://www.youtube.com/watch?v=XUhdzIO6lgg&ab_channel=ByteGrad)
 

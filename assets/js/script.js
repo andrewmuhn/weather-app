@@ -82,14 +82,15 @@ const printCurrentWeatherData = (data) => {
   let cityName = data.name;
   let date = new Date();
   let year = date.getFullYear();
-  let month = date.getMonth() + 1;
-  let day = date.getDate();
+  let month = `0${date.getMonth() + 1}`;
+  let day = `0${date.getDate()}`;
   let icon = data.weather[0].icon;
   let temp = data.main.temp;
   let wind = data.wind.speed;
   let humidity = data.main.humidity;
 
-  console.log(date.getDay());
+  day = day.slice(-2);
+  month = month.slice(-2);
 
   let dateFormat = `(${month}/${day}/${year})`;
 
@@ -130,10 +131,11 @@ const print5DayWeatherData = (data) => {
     let wind = forecastArr[i][0].wind.speed;
     let humidity = forecastArr[i][0].main.humidity;
 
-    date = date.replaceAll('-', '/').split(' ');
+    date = date.split(' ');
+    date = date[0].split('-');
 
     let dateEl = document.createElement('h4');
-    dateEl.textContent = date[0];
+    dateEl.textContent = `${date[1]}/${date[2]}/${date[0]}`;
 
     let iconEl = document.createElement('img');
     iconEl.setAttribute('src', `https://openweathermap.org/img/wn/${icon}@2x.png`);
