@@ -18,7 +18,6 @@ let errorModal = new bootstrap.Modal('#error-modal')
 //* fetch request
 
 let searchApi = (requestUrl) => {
-  console.log(requestUrl);
   fetch(requestUrl)
     .then((response) => {
       if (!response.ok) {
@@ -122,8 +121,9 @@ const printCurrentWeatherData = (data) => {
 const print5DayWeatherData = (data) => {
 
   let forecastArr = [data.slice(3, 4), data.slice(11, 12), data.slice(19, 20), data.slice(27, 28), data.slice(35, 36)];
-  console.log(forecastArr);
+
   forecastContainerEl.innerHTML = '';
+
   for (let i = 0; i < forecastArr.length; i++) {
     let date = forecastArr[i][0].dt_txt;
     let icon = forecastArr[i][0].weather[0].icon;
@@ -213,7 +213,6 @@ const printCityList = () => {
 
   let cityList = localStorage.getItem('cityList');
   cityList = JSON.parse(cityList);
-  console.log(cityList);
   for (let i = 0; i < cityList.length; i++) {
     const name = cityList[i].cityName;
 
@@ -233,7 +232,6 @@ const printCityList = () => {
     newListItem.append(deleteEl);
     cityListEl.append(newListItem);
   }
-  console.log(searchFormEl);
 }
 
 //handles getting localstorage info for the saved city and fires off the fetch request for current and 5 day weather
