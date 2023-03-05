@@ -60,6 +60,8 @@ const handleFormSubmit = (event) => {
   cityName = cityName.toLowerCase().replace(' ', '-');
   requestUrl = requestUrl.concat(`geo/1.0/direct?limit=1&q=${cityName}&appid=${apiKey}`);
   searchApi(requestUrl);
+
+  document.querySelector('#city-name').value = ''
 }
 
 //takes geocode info and fires of fetch request for current weather and 5-day weather. fires off saveToLocalStorage
