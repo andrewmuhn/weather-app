@@ -27,8 +27,6 @@ Integrated:
 
 [How to use Date() and format it.](https://linuxhint.com/format-date-as-yyyy-mm-dd-in-javascript/#:~:text=To%20set%20the%20format%20of,and%20%E2%80%9CgetDate()%E2%80%9D%20methods.)
 
-[Further debugging on Date() method](https://discourse.nodered.org/t/date-giving-incorrect-time/68290/5)
-
 [How to use vanilla js to call bootsrap modal](https://www.youtube.com/watch?v=XUhdzIO6lgg&ab_channel=ByteGrad)
 
 

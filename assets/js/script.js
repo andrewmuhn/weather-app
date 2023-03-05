@@ -82,13 +82,14 @@ const printCurrentWeatherData = (data) => {
   let cityName = data.name;
   let date = new Date();
   let year = date.getFullYear();
-  let month = date.getMonth();
-  let day = date.getDay();
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
   let icon = data.weather[0].icon;
   let temp = data.main.temp;
   let wind = data.wind.speed;
   let humidity = data.main.humidity;
 
+  console.log(date.getDay());
 
   let dateFormat = `(${month}/${day}/${year})`;
 
