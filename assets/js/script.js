@@ -16,7 +16,6 @@ let errorModal = new bootstrap.Modal('#error-modal')
 // - append above info into html document
 
 //* fetch request
-
 let searchApi = (requestUrl) => {
   fetch(requestUrl)
     .then((response) => {
@@ -64,7 +63,7 @@ const handleFormSubmit = (event) => {
   document.querySelector('#city-name').value = ''
 }
 
-//takes geocode info and fires of fetch request for current weather and 5-day weather. fires off saveToLocalStorage
+//takes geocode info and fires of fetch request for current weather and 5-day weather.
 const searchCityWeather = (lat, lon) => {
   let requestUrl = 'https://api.openweathermap.org/'
   let currentURL = requestUrl.concat(`data/2.5/weather?units=imperial&lat=${lat}&lon=${lon}&appid=${apiKey}`);
@@ -75,7 +74,7 @@ const searchCityWeather = (lat, lon) => {
   searchApi(forecastUrl);
 }
 
-//extracts values from retured JSON weather data and displays them in html file
+//extracts current weather values from retured JSON weather data and displays them to user
 const printCurrentWeatherData = (data) => {
 
   currentWeatherEl.innerHTML = '';
@@ -119,7 +118,7 @@ const printCurrentWeatherData = (data) => {
 }
 
 
-//receives data from server and displays it
+//extracts forecast weather values from retured JSON weather data and displays them to user
 const print5DayWeatherData = (data) => {
 
   let forecastArr = [data.slice(3, 4), data.slice(11, 12), data.slice(19, 20), data.slice(27, 28), data.slice(35, 36)];
@@ -190,7 +189,7 @@ const saveToLocalStorage = (cityName, lat, lon) => {
   printCityList();
 }
 
-// Removes a city from local storage and prints the city data
+// Removes a city from local storage and fires off printCityList
 const handleDeleteCity = (event) => {
   event.stopPropagation();
   if (event.target.getAttribute('data-value') === 'delete') {
@@ -227,6 +226,7 @@ const printCityList = () => {
     let newButton = document.createElement('span');
     newButton.innerHTML = `<button type="button" data-value="city" class="my-1 btn bg-dark-subtle rounded-left" style="width:80%" left">${name}</button>`
 
+    //buttoon that is used to delete this city name from list and local storage
     var deleteEl = document.createElement('span')
     deleteEl.innerHTML = `<button type="button" class="btn btn-danger btn-delete-city rounded-right" style="width: 19%" left" data-value="delete" data-index="${i}">X</button>`
 
